@@ -1,4 +1,4 @@
-from neuron import Neuron
+from neuron import ClearableNeuron, Neuron
 import numpy as np
 
 def default(x):
@@ -27,8 +27,8 @@ class ActivationNeuron(Neuron):
   def prior(self):
     return [self.prior_neuron]
 
-class ConnectedNeuron(Neuron):
-  def __init__(self,inputs:list[Neuron], alpha:int=0.1, def_weights:np.array = None):
+class ConnectedNeuron(ClearableNeuron):
+  def __init__(self,inputs:list[Neuron], alpha:int=0.1, def_weights:np.array = None,must_clear = False):
     self.shape = len(inputs)
     self.alpha = alpha
     self.prior_neurons = inputs
@@ -42,12 +42,13 @@ class ConnectedNeuron(Neuron):
     self.last_inputs = None
     self.cur_backwards = []
     self.cur_out = None
+    self.__must_clear = must_clear
 
   def prior(self):
     return self.prior_neurons
 
   def output(self):
-    if self.cur_out is None:
+    if self.cur_out is None or self.__must_clear is False:
       ret_v = self.bias
       self.last_inputs=[]
       for weight,neuron in zip(self.weights,self.prior_neurons):
@@ -65,7 +66,6 @@ class ConnectedNeuron(Neuron):
 
   def backsend(self,error):
     self.cur_backwards.append(error)
-    #print(error)
 
   def backtrain(self):
     assert self.cur_backwards != []
@@ -74,15 +74,21 @@ class ConnectedNeuron(Neuron):
 
     for weight, neuron in zip(self.weights,self.prior_neurons):
       neuron.backsend(weight*error)
-    #print(error)
-    #print(self.weights)
-    #print(self.last_inputs)
-    #print(error * self.alpha * np.array(self.last_inputs))
     self.weights -= error * self.alpha * np.array(self.last_inputs)
-    #print(self.weights)
     self.bias -= error*self.alpha
-    #print(self.weights)
-    #print()
 
 
+class ModifiableConnectNeuron(ConnectedNeuron):
+  def add_node(self, new_node):
+    self.prior_neurons.append(new_node)
+    self.weights = np.append(self.weights,np.random.rand()-0.5)
+  def remove_node(self, node_to_remove:Neuron = None, index:int = None):
+    if index is None and node_to_remove is None:
+      raise ValueError("Needs a value to remove")
+    if (not node_to_remove is None) and (not index is None):
+      raise ValueError("Only provide one input")
+    if not node_to_remove is None:
+      index = self.prior_neurons.index(node_to_remove)
 
+    self.prior_neurons.pop(index)
+    self.weights.pop(index)

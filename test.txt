@@ -1,0 +1,14 @@
+Connect new output neurons to existing layers
+
+Neurogenesis: For some time keep adding new nodes to process new information
+  Possibly if one output is satisfied but the rest aren't (or vice versa) add node connecting unsatisfied values
+  Could be done on every layer
+
+Synaptogenesis: When new inputs exceed previous, connect to other active nodes
+  Make Graph and connect to active nodes BEFORE this one
+  Or just use prior layers
+
+Possibility to drop nodes that consistently output near 0?
+  Forget unimportant information
+
+

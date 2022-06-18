@@ -5,18 +5,20 @@ from overrider import overrides
 from clearable_layer import ClearableLayer
 
 class FCLayer(ClearableLayer):
-  def __init__(self, prev_layer:Layer, size):
+  def __init__(self, prev_layer:Layer, size, must_clear = False):
     self._size = size
     self.__nodes:List[ConnectedNeuron] = []
     prev_nodes = prev_layer.get_nodes()
     for i in range(size):
-      self.__nodes.append(ConnectedNeuron(prev_nodes))
+      self.__nodes.append(ConnectedNeuron(prev_nodes,must_clear = must_clear))
 
     self.prev_layer = prev_layer
+    self.__must_clear = must_clear
 
   def clear(self):
-    for node in self.__nodes:
-      node.clear()
+    if self.__must_clear is True:
+      for node in self.__nodes:
+        node.clear()
 
   @overrides(Layer)
   def output(self):

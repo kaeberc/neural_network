@@ -1,7 +1,6 @@
 import numpy as np
 import abc
 
-
 class Neuron:
   @abc.abstractclassmethod
   def output(self):
@@ -28,3 +27,7 @@ class Neuron:
     Returns the previous neurons
     """
     return []
+
+class ClearableNeuron(Neuron):
+  def clear(self):
+    raise NotImplementedError
