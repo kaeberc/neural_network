@@ -1,3 +1,4 @@
+from typing import Callable
 from neuron import ClearableNeuron, Neuron
 import numpy as np
 
@@ -49,6 +50,7 @@ class ConnectedNeuron(ClearableNeuron):
 
   def output(self):
     if self.cur_out is None or self.__must_clear is False:
+      self.cur_backwards = []
       ret_v = self.bias
       self.last_inputs=[]
       for weight,neuron in zip(self.weights,self.prior_neurons):
@@ -63,6 +65,7 @@ class ConnectedNeuron(ClearableNeuron):
 
   def clear(self):
     self.cur_out = None
+    self.cur_backwards = []
 
   def backsend(self,error):
     self.cur_backwards.append(error)
@@ -70,7 +73,6 @@ class ConnectedNeuron(ClearableNeuron):
   def backtrain(self):
     assert self.cur_backwards != []
     error = np.sum(np.array(self.cur_backwards))
-    self.cur_backwards = []
 
     for weight, neuron in zip(self.weights,self.prior_neurons):
       neuron.backsend(weight*error)
@@ -92,3 +94,28 @@ class ModifiableConnectNeuron(ConnectedNeuron):
 
     self.prior_neurons.pop(index)
     self.weights.pop(index)
+
+class ModActivConnectNeuron(ModifiableConnectNeuron):
+  def __init__(self,inputs:list[Neuron],actv_func:Callable = default,actv_prime:Callable = default_prime, alpha:int=0.1, def_weights:np.array = None,must_clear = False):
+    super().__init__(inputs, alpha, def_weights,must_clear)
+    self.actv_func = actv_func
+    self.actv_prime = actv_prime
+
+  def output(self):
+    self.__last_suboutput = super().output()
+    return self.actv_func(self.__last_suboutput)
+
+  def backsend(self,error):
+    self.cur_backwards.append(self.actv_prime(self.__last_suboutput)*error)
+
+  def backtrain(self):
+    #assert self.cur_backwards != []
+
+    if not self.cur_backwards == []:
+
+      error = np.sum(np.array(self.cur_backwards))
+
+      for weight, neuron in zip(self.weights,self.prior_neurons):
+        neuron.backsend(weight*error)
+      self.weights -= error * self.alpha * np.array(self.last_inputs)
+      self.bias -= error*self.alpha

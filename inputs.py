@@ -4,7 +4,7 @@ import numpy as np
 def default():
   return 1
 
-class InputNeuron:
+class InputNeuron(Neuron):
   def __init__(self, obsv_func=default):
     self.obsv_func = obsv_func
 
@@ -16,3 +16,5 @@ class InputNeuron:
 
   def backtrain(self):
     pass
+  def prior(self):
+    return []

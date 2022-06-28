@@ -42,21 +42,22 @@ y_train = np.array([[[0]], [[1]], [[1]], [[0]]])
 input_x = InputNeuron(get_x)
 input_y = InputNeuron(get_y)
 
-layer1_1 = ConnectedNeuron([input_x,input_y],0.2)
-layer1_2 = ConnectedNeuron([input_x,input_y],0.2)
-layer1_3 = ConnectedNeuron([input_x,input_y],0.2)
+layer1_1 = ModActivConnectNeuron([input_x,input_y],actv_func=tanh,actv_prime = tanh_prime,alpha=0.2)
+layer1_2 = ModActivConnectNeuron([input_x,input_y],actv_func=tanh,actv_prime = tanh_prime,alpha=0.2)
+layer1_3 = ModActivConnectNeuron([input_x,input_y],actv_func=tanh,actv_prime = tanh_prime,alpha=0.2)
 
-layer2_1 = ActivationNeuron(layer1_1,tanh,tanh_prime)
-layer2_2 = ActivationNeuron(layer1_2,tanh,tanh_prime)
-layer2_3 = ActivationNeuron(layer1_3,tanh,tanh_prime)
+#layer2_1 = ActivationNeuron(layer1_1,tanh,tanh_prime)
+#layer2_2 = ActivationNeuron(layer1_2,tanh,tanh_prime)
+#layer2_3 = ActivationNeuron(layer1_3,tanh,tanh_prime)
 
-layer3_1 = ConnectedNeuron([layer2_1,layer2_2,layer2_3],0.2)
+#layer3_1 = ConnectedNeuron([layer1_1,layer1_2,layer1_3],0.2)
 
-layer4_1 = ActivationNeuron(layer3_1,tanh,tanh_prime)
+#layer4_1 = ActivationNeuron(layer3_1,tanh,tanh_prime)
+
+layer2_1 = ModActivConnectNeuron([layer1_1,layer1_2,layer1_3],actv_func = tanh, actv_prime = tanh_prime, alpha=0.2)
 
 loss = mse
 loss_prime = mse_prime
-print(layer3_1.weights)
 for i in range(1000):
   err = 0
 
@@ -67,7 +68,8 @@ for i in range(1000):
     x = output[0]
     y = output[1]
 
-    output = layer4_1.output()
+    #output = layer4_1.output()
+    output = layer2_1.output()
 
     err += loss(y_train[j],output)
 
@@ -76,17 +78,16 @@ for i in range(1000):
 
 
     # Do this better
-    layer4_1.backsend(error)
-    layer4_1.backtrain()
-    #print(error,layer3_1.cur_backwards)
+    layer2_1.backsend(error)
+    layer2_1.backtrain()
     #print(layer3_1.weights)
     #print(layer3_1.cur_backwards)
-    layer3_1.backtrain()
+    #layer3_1.backtrain()
     #print()
 
-    layer2_1.backtrain()
-    layer2_2.backtrain()
-    layer2_3.backtrain()
+    #layer2_1.backtrain()
+    #layer2_2.backtrain()
+    #layer2_3.backtrain()
 
     layer1_1.backtrain()
     layer1_2.backtrain()
@@ -95,7 +96,7 @@ for i in range(1000):
     layer1_1.clear()
     layer1_2.clear()
     layer1_3.clear()
-    layer3_1.clear()
+    layer2_1.clear()
     #print(error[0][0],layer3_1.weights,layer3_1.bias)
     #print(layer1_1.weights,layer1_2.weights)
 
@@ -114,14 +115,14 @@ for i in range(samples):
   x = output[0][0]
   y = output[0][1]
   compare_results.append((x,y))
-  result.append(layer4_1.output())
+  result.append(layer2_1.output())
   layer1_1.clear()
   layer1_2.clear()
   layer1_3.clear()
-  layer3_1.clear()
+  layer2_1.clear()
 
 print(compare_results)
 print(result)
-print(layer3_1.weights)
+print(layer2_1.weights)
 print(layer1_1.weights,layer1_2.weights)
 print(tanh_prime(1))

@@ -1,4 +1,3 @@
-from torch import R
 from clearable_layer import ClearableLayer
 from layer import Layer
 from overrider import overrides
