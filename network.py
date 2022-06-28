@@ -176,6 +176,7 @@ class SynaptoNetwork(ModifiableNeuronNetwork):
         if abs(cur_node.output()) > 0.5:
           if not cur_node in priors:
             node.add_node(cur_node)
+            break
 
 class NGNetwork(ModifiableNeuronNetwork):
 
@@ -216,6 +217,7 @@ class BrainNetwork(NGNetwork,SynaptoNetwork):
       print("Test")
       self.synaptogenesis()
       self.neurogenesis()
+
       self.__count = 0
       self.__interval += 10
     self.__count += 1

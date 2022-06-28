@@ -8,6 +8,8 @@ net = BrainNetwork()
 x_train = [[0,0],[0,1],[1,0],[1,1]]
 y_train = [[0],[1],[1],[0]]
 
+#x_train = []
+
 node1 = net.add_input_node()
 node2 = net.add_input_node()
 
@@ -24,7 +26,7 @@ net.add_node(sec_node)
 net.add_output_node(out_node)
 continu= True
 while continu:
-  net.train(x_train,y_train,100,mse,mse_prime)
+  net.train(x_train,y_train,200,mse,mse_prime)
   for item in x_train:
     net.put_inputs(item)
     print(net.get_outputs())
