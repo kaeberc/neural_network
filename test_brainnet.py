@@ -11,19 +11,26 @@ y_train = [[0],[1],[1],[0]]
 node1 = net.add_input_node()
 node2 = net.add_input_node()
 
-init_node = ModActivConnectNeuron([node1,node2],actv_func = tanh, actv_prime = tanh_prime)
-sec_node = ModActivConnectNeuron([node1,node2],actv_func = tanh, actv_prime = tanh_prime)
+init_node = ModActivConnectNeuron([node1,node2],actv_func = tanh, actv_prime = tanh_prime,alpha=0.2)
+sec_node = ModActivConnectNeuron([node1,node2],actv_func = tanh, actv_prime = tanh_prime,alpha=0.2)
 #third_node = ModActivConnectNeuron([node1,node2],actv_func = tanh, actv_prime = tanh_prime)
 
-out_node = ModActivConnectNeuron([init_node,sec_node],actv_func=tanh,actv_prime=tanh_prime)
+out_node = ModActivConnectNeuron([init_node,sec_node],actv_func=tanh,actv_prime=tanh_prime,alpha=0.2)
 
 #net.add_output_node(init_node)
 net.add_node(init_node)
 net.add_node(sec_node)
 #net.add_node(third_node)
 net.add_output_node(out_node)
-
-net.train(x_train,y_train,1000,mse,mse_prime)
-for item in x_train:
-  net.put_inputs(item)
-  print(net.get_outputs())
+continu= True
+while continu:
+  net.train(x_train,y_train,100,mse,mse_prime)
+  for item in x_train:
+    net.put_inputs(item)
+    print(net.get_outputs())
+    for item in net.get_outputs():
+      bad = True
+      if abs(item-0.5) > 0.3:
+        bad = False
+      if not bad:
+        continu = False

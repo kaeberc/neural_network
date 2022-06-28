@@ -217,6 +217,7 @@ class BrainNetwork(NGNetwork,SynaptoNetwork):
       self.synaptogenesis()
       self.neurogenesis()
       self.__count = 0
+      self.__interval += 10
     self.__count += 1
 
 
