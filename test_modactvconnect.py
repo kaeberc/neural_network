@@ -42,9 +42,9 @@ y_train = np.array([[[0]], [[1]], [[1]], [[0]]])
 input_x = InputNeuron(get_x)
 input_y = InputNeuron(get_y)
 
-layer1_1 = ModActivConnectNeuron([input_x,input_y],actv_func=tanh,actv_prime = tanh_prime,alpha=0.2)
-layer1_2 = ModActivConnectNeuron([input_x,input_y],actv_func=tanh,actv_prime = tanh_prime,alpha=0.2)
-layer1_3 = ModActivConnectNeuron([input_x,input_y],actv_func=tanh,actv_prime = tanh_prime,alpha=0.2)
+layer1_1 = ModActivConnectNeuron([input_x,input_y],actv_func=tanh,actv_prime = tanh_prime,alpha=0.1)
+layer1_2 = ModActivConnectNeuron([input_x,input_y],actv_func=tanh,actv_prime = tanh_prime,alpha=0.1)
+layer1_3 = ModActivConnectNeuron([input_x,input_y],actv_func=tanh,actv_prime = tanh_prime,alpha=0.1)
 
 #layer2_1 = ActivationNeuron(layer1_1,tanh,tanh_prime)
 #layer2_2 = ActivationNeuron(layer1_2,tanh,tanh_prime)
@@ -54,11 +54,11 @@ layer1_3 = ModActivConnectNeuron([input_x,input_y],actv_func=tanh,actv_prime = t
 
 #layer4_1 = ActivationNeuron(layer3_1,tanh,tanh_prime)
 
-layer2_1 = ModActivConnectNeuron([layer1_1,layer1_2,layer1_3],actv_func = tanh, actv_prime = tanh_prime, alpha=0.2)
+layer2_1 = ModActivConnectNeuron([layer1_1,layer1_2,layer1_3],actv_func = tanh, actv_prime = tanh_prime, alpha=0.1)
 
 loss = mse
 loss_prime = mse_prime
-for i in range(1000):
+for i in range(500):
   err = 0
 
 

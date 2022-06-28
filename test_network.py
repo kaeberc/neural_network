@@ -13,4 +13,4 @@ net.add_layer(ActivationLayer(net._last_layer,tanh,tanh_prime))
 net.add_layer(FCLayer(net._last_layer,1))
 net.add_layer(ActivationLayer(net._last_layer,tanh,tanh_prime))
 
-net.train(x_train,y_train,1000,mse,mse_prime)
+net.train(x_train,y_train,500,mse,mse_prime)

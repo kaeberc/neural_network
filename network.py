@@ -192,7 +192,7 @@ class NGNetwork(ModifiableNeuronNetwork):
       node_index = self._all_nodes.index(node)
       err = sum(node.cur_backwards)
 
-      if abs(err) > 1.0 and len(node.prior()) < 5: #and r.random() > 0.9:
+      if abs(err) > 0.5 and len(node.prior()) < 5: #and r.random() > 0.9:
         priors = [self._all_nodes[node_index-1]]
 
         for i in range(2):
