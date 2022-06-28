@@ -203,14 +203,21 @@ class NGNetwork(ModifiableNeuronNetwork):
         self.add_node(new_node)
 
 class BrainNetwork(NGNetwork,SynaptoNetwork):
-  def train_single(self,error):
-    #super().train_single(error)
-    ModifiableNeuronNetwork.train_single(self,error)
-    #SynaptoNetwork.synaptogenesis(self)
-    self.synaptogenesis()
-    self.neurogenesis()
-    #NGNetwork.neurogenesis(self)
+  def __init__(self,needs_clear = True, develop_interval = 100):
+    super().__init__()
+    self.__count = 0
+    self.__interval = 100
 
+  @overrides(NGNetwork)
+  @overrides(SynaptoNetwork)
+  def train_single(self,error):
+    ModifiableNeuronNetwork.train_single(self,error)
+    if self.__count == self.__interval:
+      print("Test")
+      self.synaptogenesis()
+      self.neurogenesis()
+      self.__count = 0
+    self.__count += 1
 
 
 

@@ -3,7 +3,7 @@ from complex_neurons import *
 from losses import *
 from activations import *
 
-net = NGNetwork()
+net = BrainNetwork()
 
 x_train = [[0,0],[0,1],[1,0],[1,1]]
 y_train = [[0],[1],[1],[0]]
